@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'pages/todo_page.dart';
 
 void main() => runApp(const MyApp());
@@ -8,10 +8,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return MaterialApp(
       title: 'Simple ToDo',
-      theme: const CupertinoThemeData(
-        primaryColor: CupertinoColors.systemPink,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+        useMaterial3: true,
       ),
       home: const TodoPage(),
     );

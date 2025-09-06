@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../models/todo.dart';
 import '../widgets/empty_view.dart';
 import '../widgets/add_todo_bottom_sheet.dart';
@@ -18,8 +18,9 @@ class _TodoPageState extends State<TodoPage> {
   ];
 
   Future<void> _addTodo() async {
-    final result = await showCupertinoModalPopup<String>(
+    final result = await showModalBottomSheet<String>(
       context: context,
+      isScrollControlled: true,
       builder: (ctx) => const AddTodoBottomSheet(),
     );
 
@@ -41,6 +42,9 @@ class _TodoPageState extends State<TodoPage> {
     setState(() {
       _todos.removeWhere((t) => t.id == id);
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已删除')),
+    );
   }
 
   void _editTodo(String id, String newTitle) {
@@ -53,55 +57,41 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     final doneCount = _todos.where((t) => t.done).length;
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Simple ToDo'),
-        trailing: Padding(
-          padding: const EdgeInsets.only(right: 4),
-          child: Text(
-            '$doneCount / ${_todos.length}',
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
-      child: SafeArea(
-        child: _todos.isEmpty
-            ? const EmptyView()
-            : Stack(
-                children: [
-                  CupertinoScrollbar(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 100),
-                      itemCount: _todos.length,
-                      itemBuilder: (context, index) {
-                        final todo = _todos[index];
-                        return TodoListItem(
-                          todo: todo,
-                          onToggle: (value) => _toggleTodo(todo.id, value),
-                          onRemove: () => _removeTodo(todo.id),
-                          onEdit: (newTitle) => _editTodo(todo.id, newTitle),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: CupertinoButton.filled(
-                      onPressed: _addTodo,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(CupertinoIcons.add, size: 20),
-                          SizedBox(width: 8),
-                          Text('新增'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Simple ToDo'),
+        actions: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Text(
+                '$doneCount / ${_todos.length}',
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
+            ),
+          ),
+        ],
+      ),
+      body: _todos.isEmpty
+          ? const EmptyView()
+          : ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _todos.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (context, index) {
+                final todo = _todos[index];
+                return TodoListItem(
+                  todo: todo,
+                  onToggle: (value) => _toggleTodo(todo.id, value),
+                  onRemove: () => _removeTodo(todo.id),
+                  onEdit: (newTitle) => _editTodo(todo.id, newTitle),
+                );
+              },
+            ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _addTodo,
+        label: const Text('新增'),
+        icon: const Icon(Icons.add),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../models/todo.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
@@ -8,19 +8,12 @@ class DeleteConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
+    return AlertDialog(
       title: const Text('确认删除？'),
       content: Text('删除「${todo.title}」后不可恢复。'),
       actions: [
-        CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('取消'),
-        ),
-        CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context, true),
-          isDestructiveAction: true,
-          child: const Text('删除'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+        FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('删除')),
       ],
     );
   }

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../models/todo.dart';
 
 class EditTodoDialog extends StatefulWidget {
@@ -12,6 +12,7 @@ class EditTodoDialog extends StatefulWidget {
 
 class _EditTodoDialogState extends State<EditTodoDialog> {
   late final TextEditingController _controller;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -20,9 +21,8 @@ class _EditTodoDialogState extends State<EditTodoDialog> {
   }
 
   void _submit() {
-    final text = _controller.text.trim();
-    if (text.isNotEmpty) {
-      Navigator.of(context).pop(text);
+    if (_formKey.currentState!.validate()) {
+      Navigator.of(context).pop(_controller.text.trim());
     }
   }
 
@@ -34,28 +34,27 @@ class _EditTodoDialogState extends State<EditTodoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
+    return AlertDialog(
       title: const Text('编辑待办'),
-      content: Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: CupertinoTextField(
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
           controller: _controller,
-          placeholder: '待办标题',
+          decoration: const InputDecoration(
+            labelText: '待办标题',
+            border: OutlineInputBorder(),
+          ),
           maxLength: 60,
-          autofocus: true,
-          onSubmitted: (_) => _submit(),
+          validator: (v) {
+            if (v == null || v.trim().isEmpty) return '内容不能为空';
+            return null;
+          },
+          onFieldSubmitted: (_) => _submit(),
         ),
       ),
       actions: [
-        CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('取消'),
-        ),
-        CupertinoDialogAction(
-          onPressed: _submit,
-          isDefaultAction: true,
-          child: const Text('保存'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
+        FilledButton(onPressed: _submit, child: const Text('保存')),
       ],
     );
   }
