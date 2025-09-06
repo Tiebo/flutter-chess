@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SettingsProvider extends ChangeNotifier {
+  static const String _boxName = 'settings';
   static const String _localeKey = 'locale';
   static const String _themeModeKey = 'theme_mode';
 
+  late Box _settingsBox;
   Locale _locale = const Locale('zh');
   ThemeMode _themeMode = ThemeMode.system;
 
@@ -12,16 +14,19 @@ class SettingsProvider extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   SettingsProvider() {
+    _initHive();
+  }
+
+  Future<void> _initHive() async {
+    _settingsBox = await Hive.openBox(_boxName);
     _loadSettings();
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    
-    final localeString = prefs.getString(_localeKey) ?? 'zh';
+  void _loadSettings() {
+    final localeString = _settingsBox.get(_localeKey, defaultValue: 'zh') as String;
     _locale = Locale(localeString);
     
-    final themeModeString = prefs.getString(_themeModeKey) ?? 'system';
+    final themeModeString = _settingsBox.get(_themeModeKey, defaultValue: 'system') as String;
     _themeMode = _getThemeModeFromString(themeModeString);
     
     notifyListeners();
@@ -31,8 +36,7 @@ class SettingsProvider extends ChangeNotifier {
     if (_locale == locale) return;
     
     _locale = locale;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_localeKey, locale.languageCode);
+    await _settingsBox.put(_localeKey, locale.languageCode);
     notifyListeners();
   }
 
@@ -40,8 +44,7 @@ class SettingsProvider extends ChangeNotifier {
     if (_themeMode == themeMode) return;
     
     _themeMode = themeMode;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_themeModeKey, _getStringFromThemeMode(themeMode));
+    await _settingsBox.put(_themeModeKey, _getStringFromThemeMode(themeMode));
     notifyListeners();
   }
 
@@ -52,6 +55,7 @@ class SettingsProvider extends ChangeNotifier {
       case 'dark':
         return ThemeMode.dark;
       case 'system':
+        return ThemeMode.system;
       default:
         return ThemeMode.system;
     }
@@ -64,7 +68,6 @@ class SettingsProvider extends ChangeNotifier {
       case ThemeMode.dark:
         return 'dark';
       case ThemeMode.system:
-      default:
         return 'system';
     }
   }

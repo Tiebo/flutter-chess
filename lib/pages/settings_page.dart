@@ -42,18 +42,24 @@ class SettingsPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            RadioListTile<Locale>(
+            ListTile(
+              leading: Icon(
+                provider.locale.languageCode == 'zh' 
+                    ? Icons.radio_button_checked 
+                    : Icons.radio_button_unchecked,
+              ),
               title: Text(l10n.chinese),
-              value: const Locale('zh'),
-              groupValue: provider.locale,
-              onChanged: (locale) => provider.setLocale(locale!),
+              onTap: () => provider.setLocale(const Locale('zh')),
               contentPadding: EdgeInsets.zero,
             ),
-            RadioListTile<Locale>(
+            ListTile(
+              leading: Icon(
+                provider.locale.languageCode == 'en' 
+                    ? Icons.radio_button_checked 
+                    : Icons.radio_button_unchecked,
+              ),
               title: Text(l10n.english),
-              value: const Locale('en'),
-              groupValue: provider.locale,
-              onChanged: (locale) => provider.setLocale(locale!),
+              onTap: () => provider.setLocale(const Locale('en')),
               contentPadding: EdgeInsets.zero,
             ),
           ],
@@ -74,25 +80,34 @@ class SettingsPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            RadioListTile<ThemeMode>(
+            ListTile(
+              leading: Icon(
+                provider.themeMode == ThemeMode.light 
+                    ? Icons.radio_button_checked 
+                    : Icons.radio_button_unchecked,
+              ),
               title: Text(l10n.lightTheme),
-              value: ThemeMode.light,
-              groupValue: provider.themeMode,
-              onChanged: (themeMode) => provider.setThemeMode(themeMode!),
+              onTap: () => provider.setThemeMode(ThemeMode.light),
               contentPadding: EdgeInsets.zero,
             ),
-            RadioListTile<ThemeMode>(
+            ListTile(
+              leading: Icon(
+                provider.themeMode == ThemeMode.dark 
+                    ? Icons.radio_button_checked 
+                    : Icons.radio_button_unchecked,
+              ),
               title: Text(l10n.darkTheme),
-              value: ThemeMode.dark,
-              groupValue: provider.themeMode,
-              onChanged: (themeMode) => provider.setThemeMode(themeMode!),
+              onTap: () => provider.setThemeMode(ThemeMode.dark),
               contentPadding: EdgeInsets.zero,
             ),
-            RadioListTile<ThemeMode>(
+            ListTile(
+              leading: Icon(
+                provider.themeMode == ThemeMode.system 
+                    ? Icons.radio_button_checked 
+                    : Icons.radio_button_unchecked,
+              ),
               title: Text(l10n.systemTheme),
-              value: ThemeMode.system,
-              groupValue: provider.themeMode,
-              onChanged: (themeMode) => provider.setThemeMode(themeMode!),
+              onTap: () => provider.setThemeMode(ThemeMode.system),
               contentPadding: EdgeInsets.zero,
             ),
           ],
