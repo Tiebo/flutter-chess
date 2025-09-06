@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/todo.dart';
-import '../widgets/empty_view.dart';
-import '../widgets/add_todo_bottom_sheet.dart';
-import '../widgets/todo_list_item.dart';
+import '../widgets/page_widgets/todo/empty_view.dart';
+import '../widgets/page_widgets/todo/add_todo_bottom_sheet.dart';
+import '../widgets/page_widgets/todo/todo_list_item.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({super.key});

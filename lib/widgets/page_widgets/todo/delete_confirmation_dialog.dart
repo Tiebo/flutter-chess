@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/todo.dart';
+import '../../../models/todo.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final Todo todo;
