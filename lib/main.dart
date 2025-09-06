@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'l10n/app_localizations.dart';
@@ -13,50 +13,49 @@ void main() async {
   await Hive.initFlutter();
   
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingsProvider(),
-      child: const MyApp(),
+    const ProviderScope(
+      child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(
-      builder: (context, settingsProvider, child) {
-        return MaterialApp.router(
-          title: 'Simple ToDo',
-          locale: settingsProvider.locale,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('zh'),
-            Locale('en'),
-          ],
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-            useMaterial3: true,
-            brightness: Brightness.light,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.pink,
-              brightness: Brightness.dark,
-            ),
-            useMaterial3: true,
-            brightness: Brightness.dark,
-          ),
-          themeMode: settingsProvider.themeMode,
-          routerConfig: AppRouter.router,
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 使用便利的provider来获取当前设置
+    final locale = ref.watch(currentLocaleProvider);
+    final themeMode = ref.watch(currentThemeModeProvider);
+    
+    return MaterialApp.router(
+      title: 'Simple ToDo',
+      locale: locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('zh'),
+        Locale('en'),
+      ],
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+        useMaterial3: true,
+        brightness: Brightness.light,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+        brightness: Brightness.dark,
+      ),
+      themeMode: themeMode,
+      routerConfig: AppRouter.router,
     );
   }
 }

@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/settings_provider.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/common/common_header.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final settingsAsync = ref.watch(settingsProvider);
     
     return Scaffold(
       appBar: CommonHeader(
         title: l10n.settings,
       ),
-      body: Consumer<SettingsProvider>(
-        builder: (context, settingsProvider, child) {
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              _buildLanguageSection(context, settingsProvider, l10n),
-              const SizedBox(height: 16),
-              _buildThemeSection(context, settingsProvider, l10n),
-            ],
-          );
-        },
+      body: settingsAsync.when(
+        data: (settings) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildLanguageSection(context, ref, settings, l10n),
+            const SizedBox(height: 16),
+            _buildThemeSection(context, ref, settings, l10n),
+          ],
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Text('Error: $error'),
+        ),
       ),
     );
   }
 
-  Widget _buildLanguageSection(BuildContext context, SettingsProvider provider, AppLocalizations l10n) {
+  Widget _buildLanguageSection(BuildContext context, WidgetRef ref, AppSettings settings, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -44,22 +47,22 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: 12),
             ListTile(
               leading: Icon(
-                provider.locale.languageCode == 'zh' 
+                settings.locale.languageCode == 'zh' 
                     ? Icons.radio_button_checked 
                     : Icons.radio_button_unchecked,
               ),
               title: Text(l10n.chinese),
-              onTap: () => provider.setLocale(const Locale('zh')),
+              onTap: () => ref.read(settingsProvider.notifier).setLocale(const Locale('zh')),
               contentPadding: EdgeInsets.zero,
             ),
             ListTile(
               leading: Icon(
-                provider.locale.languageCode == 'en' 
+                settings.locale.languageCode == 'en' 
                     ? Icons.radio_button_checked 
                     : Icons.radio_button_unchecked,
               ),
               title: Text(l10n.english),
-              onTap: () => provider.setLocale(const Locale('en')),
+              onTap: () => ref.read(settingsProvider.notifier).setLocale(const Locale('en')),
               contentPadding: EdgeInsets.zero,
             ),
           ],
@@ -68,7 +71,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildThemeSection(BuildContext context, SettingsProvider provider, AppLocalizations l10n) {
+  Widget _buildThemeSection(BuildContext context, WidgetRef ref, AppSettings settings, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -82,32 +85,32 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: 12),
             ListTile(
               leading: Icon(
-                provider.themeMode == ThemeMode.light 
+                settings.themeMode == ThemeMode.light 
                     ? Icons.radio_button_checked 
                     : Icons.radio_button_unchecked,
               ),
               title: Text(l10n.lightTheme),
-              onTap: () => provider.setThemeMode(ThemeMode.light),
+              onTap: () => ref.read(settingsProvider.notifier).setThemeMode(ThemeMode.light),
               contentPadding: EdgeInsets.zero,
             ),
             ListTile(
               leading: Icon(
-                provider.themeMode == ThemeMode.dark 
+                settings.themeMode == ThemeMode.dark 
                     ? Icons.radio_button_checked 
                     : Icons.radio_button_unchecked,
               ),
               title: Text(l10n.darkTheme),
-              onTap: () => provider.setThemeMode(ThemeMode.dark),
+              onTap: () => ref.read(settingsProvider.notifier).setThemeMode(ThemeMode.dark),
               contentPadding: EdgeInsets.zero,
             ),
             ListTile(
               leading: Icon(
-                provider.themeMode == ThemeMode.system 
+                settings.themeMode == ThemeMode.system 
                     ? Icons.radio_button_checked 
                     : Icons.radio_button_unchecked,
               ),
               title: Text(l10n.systemTheme),
-              onTap: () => provider.setThemeMode(ThemeMode.system),
+              onTap: () => ref.read(settingsProvider.notifier).setThemeMode(ThemeMode.system),
               contentPadding: EdgeInsets.zero,
             ),
           ],
