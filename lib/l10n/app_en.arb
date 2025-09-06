@@ -1,0 +1,23 @@
+{
+  "appTitle": "Simple ToDo",
+  "todo": "Todo",
+  "profile": "Profile",
+  "addTodo": "Add Todo",
+  "todoTitle": "Enter todo title",
+  "add": "Add",
+  "contentCannotBeEmpty": "Content cannot be empty",
+  "personalCenter": "Personal Center",
+  "username": "Username",
+  "settings": "Settings",
+  "helpAndFeedback": "Help & Feedback",
+  "aboutUs": "About Us",
+  "logout": "Logout",
+  "deleted": "Deleted",
+  "language": "Language",
+  "theme": "Theme",
+  "chinese": "中文",
+  "english": "English",
+  "lightTheme": "Light Theme",
+  "darkTheme": "Dark Theme",
+  "systemTheme": "System Theme"
+}
