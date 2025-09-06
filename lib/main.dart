@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'l10n/app_localizations.dart';
-import 'pages/main_page.dart';
+import 'router/app_router.dart';
 import 'providers/settings_provider.dart';
 
 void main() async {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SettingsProvider>(
       builder: (context, settingsProvider, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'Simple ToDo',
           locale: settingsProvider.locale,
           localizationsDelegates: const [
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
           themeMode: settingsProvider.themeMode,
-          home: const MainPage(),
+          routerConfig: AppRouter.router,
         );
       },
     );

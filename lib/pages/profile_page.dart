@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../l10n/app_localizations.dart';
-import 'settings_page.dart';
+import '../router/app_router.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -51,13 +52,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.settings,
                     title: l10n.settings,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsPage(),
-                        ),
-                      );
-                    },
+                    onTap: () => context.go(AppRouter.settings),
                   ),
                   _buildProfileItem(
                     icon: Icons.help_outline,
