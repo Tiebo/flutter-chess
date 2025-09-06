@@ -52,7 +52,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.settings,
                     title: l10n.settings,
-                    onTap: () => context.go(AppRouter.settings),
+                    onTap: () => context.push(AppRouter.settings),
                   ),
                   _buildProfileItem(
                     icon: Icons.help_outline,

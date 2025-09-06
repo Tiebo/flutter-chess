@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/settings_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/common/common_header.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -11,9 +12,8 @@ class SettingsPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.settings),
-        centerTitle: true,
+      appBar: CommonHeader(
+        title: l10n.settings,
       ),
       body: Consumer<SettingsProvider>(
         builder: (context, settingsProvider, child) {
